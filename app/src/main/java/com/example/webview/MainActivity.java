@@ -15,8 +15,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,8 +57,14 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     OkHttpClient client = new OkHttpClient();
+                    RequestBody requestBody = new FormBody.Builder()
+                            .add("username", "admin")
+                            .add("password", "123456")
+                            .build();
+
                     Request request = new Request.Builder()
                             .url("http://www.baidu.com")
+                            .post(requestBody)
                             .build();
                     Response response = client.newCall(request).execute();
                     String responseString = response.body().string();
