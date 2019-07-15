@@ -15,6 +15,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button mButton;
@@ -24,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        使用webView控件
 //        WebView webView = findViewById(R.id.web_view);
 //        webView.getSettings().setJavaScriptEnabled(true);
 //        webView.setWebViewClient(new WebViewClient());
@@ -33,9 +39,33 @@ public class MainActivity extends AppCompatActivity {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendHttpURlConnection();
+//              使用HttpUrlConnection
+//                sendHttpURlConnection();
+//              使用Okhttp
+                sendRquestOkhttp();
             }
+
+
         });
+    }
+
+    private void sendRquestOkhttp() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    OkHttpClient client = new OkHttpClient();
+                    Request request = new Request.Builder()
+                            .url("http://www.baidu.com")
+                            .build();
+                    Response response = client.newCall(request).execute();
+                    String responseString = response.body().string();
+                    showResponse(responseString);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     private void sendHttpURlConnection() {
